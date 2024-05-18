@@ -1,0 +1,43 @@
+
+echo "creating munge and slurm user"
+sudo groupadd -g 2005 munge
+sudo useradd -m -c "MUNGE Uid 'N' Gid Emporium" -d /var/lib/munge -u 2005 -g munge -s /sbin/nologin munge
+sudo groupadd -g 2006 slurm
+sudo useradd -m -c "SLURM workload manager" -d /var/lib/slurm -u 2006 -g slurm -s /bin/bash slurm
+sudo apt install -y munge
+
+echo "copying mungekey and setting perm"
+sudo cp /home/clustershare/munge.key /etc/munge/
+sudo chown munge:munge /etc/munge/munge.key
+sudo chmod 400 /etc/munge/munge.key
+sudo systemctl enable munge
+sudo systemctl start munge
+echo "munge enabled and started"
+
+echo "############ now installing slurm-wlm #########"
+sudo apt-get install slurm-wlm
+sudo scp /home/clustershare/slurm.conf /etc/slurm/
+sudo scp /home/clustershare/cgroup.conf /etc/slurm/
+sudo scp /home/clustershare/gres.conf /etc/slurm/
+sudo scp /home/clustershare/tempslurm/slurm.conf /usr/lib/tmpfiles.d/
+
+sudo mkdir /var/spool/slurmd
+sudo chown slurm: /var/spool/slurmd
+sudo chmod 755 /var/spool/slurmd
+sudo mkdir /var/log/slurm
+sudo touch /var/log/slurm/slurmd.log
+sudo chown -R slurm:slurm /var/log/slurm/slurmd.log
+sudo chmod 755 /var/log/slurm
+sudo mkdir /run/slurm
+sudo touch /run/slurm/slurmd.pid
+sudo chown slurm:slurm /run/slurm
+sudo chmod -R 770 /run/slurm
+
+echo "Starting services"
+#sudo slurmd -C
+sudo systemctl daemon-reload
+sudo systemctl start slurmd.service
+sudo systemctl enable slurmd.service
+sudo systemctl status slurmd.service
+
+sudo slurmd -C
