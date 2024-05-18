@@ -1,0 +1,36 @@
+#!/bin/bash
+
+REPQUOTA_OUTPUT=$(sudo repquota -s /raid)
+
+EXCEEDED_USERS=$(echo "$REPQUOTA_OUTPUT" | awk '$1 !~ /^(root|--|Block|User)$/ && $4 > 0 && $5 > 0 && $7 >
+
+PASSWD_FILE="/etc/passwd"
+ADMIN_EMAIL="204050007@iitb.ac.in"
+
+get_email() {
+    local user=$1
+    grep "^$user:" $PASSWD_FILE | cut -d':' -f5 | cut -d',' -f1
+}
+
+MISSING_EMAIL_USERS=""
+
+for user in $EXCEEDED_USERS; do
+    email=$(get_email $user)
+    
+    if [[ -n $email ]]; then
+        echo "Dear $user,
+
+You have exceeded your disk quota limit on DGX6. Please reduce your disk usage to comply with the soft li>
+
+Thank you,
+Raj" | mail -s "DGX6 Warning: Storage Quota exceeded" $email
+    else
+        MISSING_EMAIL_USERS+="$user\n"
+    fi
+done
+
+if [[ -n $MISSING_EMAIL_USERS ]]; then
+    echo -e "The following users have exceeded their soft disk quota limit but do not have an email addre>
+
+$MISSING_EMAIL_USERS" | mail -s "DGX6 Users quota exceeded without Email" $ADMIN_EMAIL
+fi
