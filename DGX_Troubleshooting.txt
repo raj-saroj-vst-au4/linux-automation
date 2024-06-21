@@ -1,0 +1,11 @@
+CUDA Not Found : 
+
+sudo apt install -y nvidia-driver-550-server linux-modules-nvidia-550-server-generic libnvidia-nscq-550 nvidia-modprobe nvidia-fabricmanager-550 datacenter-gpu-manager nv-persistence-mode
+
+Latest CUDA installed but still nvcc -V shows older version
+
+#check for available versions
+sudo update-alternatives --display cuda  
+
+#change the default version
+sudo update-alternatives --config cuda
