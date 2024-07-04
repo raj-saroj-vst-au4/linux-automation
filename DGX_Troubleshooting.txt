@@ -9,3 +9,6 @@ sudo update-alternatives --display cuda
 
 #change the default version
 sudo update-alternatives --config cuda
+
+# nvidia-release-upgrade says no new version found even if there is one then
+sudo nvidia-release-upgrade -d
