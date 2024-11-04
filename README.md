@@ -1,5 +1,5 @@
 # To go from drain to idle
-sudo scontrol nodename=dgxa40master state=resume
+sudo scontrol update nodename=dgxa40master state=resume
 
 # To check all nodes info
 scontrol show nodes
