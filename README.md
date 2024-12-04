@@ -10,3 +10,6 @@ sinfo
 # To check if master node down
 scontrol ping
 
+# Change access to GPU via cgroups
+nano /etc/nvidia-container-runtime/config.toml
+no-cgroups = false
