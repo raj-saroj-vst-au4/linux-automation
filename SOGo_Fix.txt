@@ -1,0 +1,18 @@
+# No domain login w regex without modifying mysql config
+/usr/lib/GNUstep/SOGo/WebServerResources/js/Main.js
+
+# modify this line
+(this.login = function () {
+        // Append domain if not already present
+        if (d.creds.username && !/@som\.iitb\.ac\.in$/.test(d.creds.username)) {
+          d.creds.username += "@som.iitb.ac.in";
+        }
+        return (
+          (d.loginState = "authenticating"),
+          n.login(d.creds).then(...
+
+#SOGo redirection to local ip fix in a reverse proxy config
+
+#root cause : $host is null always
+
+fix : replace $host with the domain "som.iitb.ac.in" or wtw 
