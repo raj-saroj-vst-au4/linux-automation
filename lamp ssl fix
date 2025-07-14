@@ -1,0 +1,3 @@
+modifying httpd-ssl.conf wont work
+
+make the same changes to httpd-vhost.conf
